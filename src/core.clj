@@ -16,18 +16,21 @@
     (loop [[f1 & f-rest] fs
            coord P
            cur-k 1]
-      (let [print-kP (fn [] (println (str cur-k "P") coord))]
+      (let [s (when f1 (calc-s f1 coord (if (= f1 double-point)
+                                 coord P) a p))
+            print-step (fn []
+                         (println (str cur-k "P") coord)
+                         (when f1 (println "s =" s)))]
         (if (not f1)
-          (do (print-kP)
+          (do (print-step)
               coord)
-          (do (print-kP)
+          (do (print-step)
               (recur f-rest (apply
                              f1
                              (filter identity
                                      [coord
                                       (if (= f1 double-point) nil P)
-                                      (calc-s f1 coord (if (= f1 double-point)
-                                                         coord P) a p)
+                                      s
                                       p]))
                      (if (= f1 double-point) (* 2 cur-k) (inc cur-k)))))))))
 
